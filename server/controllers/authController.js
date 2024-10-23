@@ -36,7 +36,7 @@ const loginUser = async (req, res) => {
     if(!user ||!(await bcrypt.compare(password, user.password))){
         return res.status(401).json({error: 'Invalid email or password'});
     }
-
+    console.log(user)
     res.json({
         _id: user._id,
         username: user.username,

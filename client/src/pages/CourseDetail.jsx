@@ -20,7 +20,7 @@ function CourseDetails() {
       const fetchCourseData = async () => {
         try {
           const response = await axios.get(`/api/courses/${courseType}`);
-          setCourseData(response.data);   // Store the course details
+          setCourseData(response.data);   
         } catch (err) {
           console.error('Error fetching course details or access denied');
         }

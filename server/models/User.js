@@ -5,6 +5,7 @@ const userSchema = new Schema({
   username: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  activeCourse: { type: Schema.Types.ObjectId, ref: 'Course' },
   completedTasks: [{ type: Schema.Types.ObjectId, ref: 'Task' }], // Array of completed task IDs
   badges: [{ type: Schema.Types.ObjectId, ref: 'Badge' }],       // Array of earned badge IDs
   points: { type: Number, default: 0 },                         // Total points for leaderboard

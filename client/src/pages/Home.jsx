@@ -1,7 +1,10 @@
 import React from 'react'
+import Navbar from '../components/Navbar'
+
 
 function Home() {
   return (
+    
     <div className="min-h-screen">
       <section className="bg-cover bg-center h-screen" style={{backgroundImage: `url(https://i.pinimg.com/originals/2b/03/ce/2b03cec90b46e701a27369634d264336.jpg)`}}>
         <div className="flex flex-col items-center justify-center h-full bg-black bg-opacity-50 text-white">
@@ -77,6 +80,7 @@ function Home() {
         </div>
         
       </section>
+
 
     </div>
   )
