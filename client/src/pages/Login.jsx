@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-const Login = ({ setIsLoggedIn, onClose }) => {
+const Login = ({ setIsLoggedIn }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
+  const handleSwitch = () =>{
+    navigate("/")
+  }
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -19,7 +23,6 @@ const Login = ({ setIsLoggedIn, onClose }) => {
       });
       localStorage.setItem("token", response.data.token);
       setIsLoggedIn(true); 
-      onClose();
       navigate("/dashboard");
       console.log("Login successful:", response.data);
     } catch (error) {
@@ -39,7 +42,9 @@ const Login = ({ setIsLoggedIn, onClose }) => {
           <div className="w-1/2 bg-cover bg-center" style={{ backgroundImage: `url('https://img.freepik.com/free-vector/cute-man-lifting-barbell-gym-cartoon-vector-icon-illustration-people-sport-icon-concept-isolated_138676-6223.jpg')` }}></div>
 
           <div className="w-1/2 bg-gray-900 p-6 text-white flex flex-col justify-center relative">
-                    
+            <button onClick={handleSwitch} className="absolute top-4 right-4 bg-gray-700 text-white p-2 rounded-full">
+                Back to website -&gt;
+              </button>
             <h2 className="text-3xl font-semibold text-center mt-4 mb-2">Login</h2>
             {errorMessage && <p className="text-red-500 text-center">{errorMessage}</p>}
             <form className="space-y-4" onSubmit={handleLogin}>
@@ -72,9 +77,9 @@ const Login = ({ setIsLoggedIn, onClose }) => {
             <div className="mt-4 text-center">
               <p className="text-sm">
                 New user?{" "}
-                <a href="/register" className="text-indigo-400 hover:underline">
+                <Link to="/register" className="text-indigo-400 hover:underline">
                   Register here
-                </a>
+                </Link>
               </p>
             </div>
           </div>

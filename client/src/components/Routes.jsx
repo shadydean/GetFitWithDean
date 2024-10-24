@@ -7,11 +7,11 @@ import Register from '../pages/Register';
 import Courses from '../pages/Courses';
 import MyProgress from '../pages/MyProgress';
 
-const AppRoutes = ({ setIsLoggedIn, onLoginClick }) => {
+const AppRoutes = ({ setIsLoggedIn }) => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} onLoginClick={onLoginClick} />} />
+      <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn}/>} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/register" element={<Register />} />
       <Route path="/courses" element={<Courses/>}/>

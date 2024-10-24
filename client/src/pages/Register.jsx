@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Register = ({ onClose, onLoginClick }) => {
   const [isModalOpen, setIsModalOpen] = useState(true);
@@ -7,26 +9,25 @@ const Register = ({ onClose, onLoginClick }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  
+  const navigate = useNavigate();
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-    onClose(); // Notify parent component
-  };
+  const handleSwitch = () =>{
+    navigate("/")
+  }
 
   const handleRegister = async (e) => {
     e.preventDefault();
     setErrorMessage(""); // Clear previous error messages
-
+    navigate("/login")
     try {
       const response = await axios.post("http://localhost:5000/api/auth/register", {
         username,
         email,
         password,
       });
-
       // You can handle successful registration here, like showing a success message or redirecting
       console.log("Registration successful:", response.data);
-      closeModal(); // Close modal after successful registration
     } catch (error) {
       if (error.response) {
         setErrorMessage(error.response.data.error);
@@ -37,8 +38,8 @@ const Register = ({ onClose, onLoginClick }) => {
   };
 
   return (
-    <div className={`relative w-full h-screen ${isModalOpen ? "bg-gray-800 bg-opacity-60" : ""}`}>
-      {isModalOpen && (
+    <div className={"relative w-full h-screen bg-gray-800 bg-opacity-60"} >
+      {(
         <div className="fixed inset-0 flex justify-center items-center">
           <div className="bg-white w-4/5 h-4/5 rounded-lg shadow-lg flex overflow-hidden relative">
             <div
@@ -47,16 +48,16 @@ const Register = ({ onClose, onLoginClick }) => {
             ></div>
 
             <div className="w-1/2 bg-gray-900 p-6 text-white flex flex-col justify-center relative">
-              <button onClick={closeModal} className="absolute top-4 right-4 bg-gray-700 text-white p-2 rounded-full">
+              <button onClick={handleSwitch} className="absolute top-4 right-4 bg-gray-700 text-white p-2 rounded-full">
                 Back to website -&gt;
               </button>
               <h2 className="text-3xl font-semibold text-center mt-4 mb-2">Create an Account</h2>
               {errorMessage && <p className="text-red-500 text-center">{errorMessage}</p>}
               <p className="text-sm mb-4 text-center">
                 Already have an account?{" "}
-                <a href="#" onClick={() => { closeModal(); onLoginClick(); }} className="text-blue-500 hover:text-blue-700">
+                <Link to="/login" onClick={() => { handleRegister}} className="text-blue-500 hover:text-blue-700">
                   Sign in
-                </a>
+                </Link>
               </p>
               <form className="space-y-4" onSubmit={handleRegister}>
                   <div className="w-full">

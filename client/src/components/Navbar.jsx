@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom'; // Added useNavigate
 import image from '../assets/649604.png';
-import { Link } from 'react-router-dom';
 
-
-const Navbar = ({ isLoggedIn, onLoginClick}) => {
+const Navbar = ({ isLoggedIn }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const navigate = useNavigate(); // Initialize navigate
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleLoginClick = () => {
+    navigate("/login"); // Use navigate for redirection
   };
 
   return (
@@ -35,16 +39,10 @@ const Navbar = ({ isLoggedIn, onLoginClick}) => {
                 <li className="md:px-4 md:py-2 hover:text-indigo-400">
                   <Link to="#">Leaderboard</Link>
                 </li>
-                {/* Other logged-in user links */}
               </>
             ) : (
               <>
-                <li className="md:px-4 md:py-2 hover:text-indigo-400">
-                  <a href="#">About</a>
-                </li>
-                <li className="md:px-4 md:py-2 hover:text-indigo-400">
-                  <a href="#">Contact</a>
-                </li>
+                {/* Other non-logged-in user links can go here */}
               </>
             )}
           </ul>
@@ -73,14 +71,14 @@ const Navbar = ({ isLoggedIn, onLoginClick}) => {
                       <a href="#" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">Settings</a>
                     </li>
                     <li>
-                      <a href="#" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">Logout</a>
+                      <Link to="/" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">Logout</Link>
                     </li>
                   </ul>
                 </div>
               )}
             </div>
           ) : (
-            <button onClick={onLoginClick} className="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-gray-50 rounded-xl flex items-center gap-2">
+            <button onClick={handleLoginClick} className="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-gray-50 rounded-xl flex items-center gap-2">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M3 3a1 1 0 011 1v12a1 1 0 11-2 0V4a1 1 0 011-1zm7.707 3.293a1 1 0 010 1.414L9.414 9H17a1 1 0 110 2H9.414l1.293 1.293a1 1 0 01-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0z" clipRule="evenodd" />
               </svg>
