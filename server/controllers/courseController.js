@@ -1,11 +1,15 @@
 const Course = require('../models/Course');
-const Task = require('../models/Task');
-
 
 const getAllCourses = async (req, res) => {
-  const courses = await Course.find().populate('tasks');
-  res.json(courses);
-};
+  try {
+      // Find all courses without using populate, since tasks are embedded
+      const courses = await Course.find();
 
+      res.json(courses);
+  } catch (error) {
+      console.error('Error fetching courses:', error);
+      res.status(500).send('Server error');
+  }
+};
 
 module.exports = { getAllCourses };

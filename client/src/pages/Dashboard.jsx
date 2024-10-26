@@ -22,7 +22,7 @@ function Dashboard() {
           headers: { Authorization: `Bearer ${token}` },
         });
         console.log(tasksResponse)
-        setTasks(tasksResponse.data);
+        setTasks(tasksResponse.data.currentTasks.tasks);
       } catch (error) {
         console.error("Error fetching dashboard data:", error);
         setError("Failed to load dashboard data.");
@@ -58,6 +58,8 @@ function Dashboard() {
           {tasks.length > 0 ? (
             tasks.map((task) => (
               <li key={task._id} className="text-gray-700">
+                {task.name}
+                <>  :  </> 
                 {task.description}
               </li>
             ))

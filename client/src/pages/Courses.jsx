@@ -4,36 +4,37 @@ import axios from 'axios';
 
 function Courses() {
   const [courses, setCourses] = useState([]); // State to store the courses
-  const [registeredCourse, setRegisteredCourse] = useState(''); // State to track the registered course
+  const [registeredCourse, setRegisteredCourse] = useState(null); // State to track the registered course
   const [loading, setLoading] = useState(true); // State to handle loading
   const [error, setError] = useState(null); // State to handle errors
 
   // Fetch courses on component mount
   useEffect(() => {
     const getCourses = async () => {
-        try {
-          const response = await axios.get("http://localhost:5000/api/courses");
-          setCourses(response.data); // Assuming the courses are at the root
-        } catch (error) {
-          console.error("Error fetching courses:", error);
-        }finally{
-            setLoading(false); // Set loading state to false after fetching courses
-        }
-      };
+      try {
+        const response = await axios.get("http://localhost:5000/api/courses");
+        console.log(response)
+        setCourses(response.data); // Assuming the courses are at the root
+      } catch (error) {
+        console.error("Error fetching courses:", error);
+        setError("Could not fetch courses. Please try again later."); // Set error state
+      } finally {
+        setLoading(false); // Set loading state to false after fetching courses
+      }
+    };
 
     getCourses(); // Call the fetch function
   }, []); // Empty dependency array to run once on mount
 
-  const handleBuy = (name) => {
+  const handleBuy = (course) => {
     // Logic to handle course purchase
-    console.log(`Buying course: ${name}`);
-    setRegisteredCourse(name); // Update registered course
+    console.log(`Buying course: ${course.name}`);
+    setRegisteredCourse(course); // Update registered course
   };
 
-  const handleSwitch = (name) => {
-    // Logic to handle course switch
-    console.log(`Switching to course: ${name}`);
-    setRegisteredCourse(title); // Update registered course
+  const handleSwitch = (course) => {
+    console.log(`Switching to course: ${course.name}`);
+    setRegisteredCourse(course); // Update registered course
   };
 
   if (loading) {
@@ -46,23 +47,19 @@ function Courses() {
 
   return (
     <div>
-        <h1 className="mt-20 text-2xl font-bold text-center">Available Courses</h1>
+      <h1 className="mt-20 text-2xl font-bold text-center">Available Courses</h1>
       <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-        {courses.map((course) => {
-          if (course.name === registeredCourse) {
-            return null;
-          }
-          return (
-            <CourseCard
-              key={course.name}
-              title={course.name}
-              description={course.description}
-              onBuy={() => handleBuy(course.name)}
-              isRegistered={registeredCourse === course.name}
-              onSwitch={() => handleSwitch(course.name)}
-            />
-          );
-        })}
+        {courses.map((course) => (
+          <CourseCard
+            key={course._id} // Use _id as the key for better uniqueness
+            title={course.name}
+            description={course.description}
+            price={course.price} // Assuming you want to show the price too
+            onBuy={() => handleBuy(course)} // Pass the whole course object
+            isRegistered={registeredCourse && registeredCourse._id === course._id} // Compare IDs for registration
+            onSwitch={() => handleSwitch(course)} // Pass the whole course object
+          />
+        ))}
       </div>
     </div>
   );

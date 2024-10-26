@@ -1,20 +1,17 @@
 const User = require('../models/User');
-const Course = require('../models/Course');
-const Task = require('../models/Task');
 
 const displayDashboardPlan = async (req, res) => {
   try {
-    const userId = req.user.id; // Get the user ID from the request (set by the protect middleware)
+    const userId = req.user.id;
 
-    // Find the user and populate their active course
-    const user = await User.findById(userId).populate('activeCourse'); // Make sure you have an activeCourse field in User
+    const user = await User.findById(userId).populate('activeCourse');
 
     if (!user || !user.activeCourse) {
       return res.status(404).json({ message: 'No active course found for this user.' });
     }
 
     res.status(200).json({
-      plan: user.activeCourse, // Sending the active course details
+      plan: user.activeCourse,
     });
   } catch (error) {
     console.error('Error fetching dashboard plan:', error);
@@ -22,24 +19,46 @@ const displayDashboardPlan = async (req, res) => {
   }
 };
 
-// Controller to get the user's tasks for the day
 const displayDashboardTasks = async (req, res) => {
   try {
-    const userId = req.user.id; // Get the user ID from the request
+    const userId = req.user.id;
 
-    // Fetch the user's active course
     const user = await User.findById(userId).populate('activeCourse');
+
     if (!user || !user.activeCourse) {
       return res.status(404).json({ message: 'No active course found for this user.' });
     }
 
-    // Find tasks associated with the user's active course
-    const tasks = await Task.find({
-      course: user.activeCourse._id, // Assuming the course name is used to filter tasks
-    });
+    const { currentWeek, currentDay, activeCourse } = user;
+
+    // Find the correct week
+    const weekData = activeCourse.weeks.find((week) => week.week === currentWeek);
+
+    if (!weekData) {
+      return res.status(404).json({ message: 'Current week data not found.' });
+    }
+
+    // Find the correct day within that week
+    const dayData = weekData.days.find((day) => day.day === currentDay);
+
+    if (!dayData) {
+      return res.status(404).json({ message: 'Current day data not found.' });
+    }
+
+    // Format and send response with the tasks for the current day
+    const tasksForCurrentDay = dayData.tasks.map((task) => ({
+      name: task.name,
+      description: task.description,
+      points: task.points,
+    }));
 
     res.status(200).json({
-      tasks, // Sending the tasks for the active course
+      currentTasks: {
+        week: currentWeek,
+        day: currentDay,
+        focus: dayData.focus,
+        tasks: tasksForCurrentDay,
+      },
     });
   } catch (error) {
     console.error('Error fetching dashboard tasks:', error);
@@ -47,7 +66,4 @@ const displayDashboardTasks = async (req, res) => {
   }
 };
 
-module.exports = {
-  displayDashboardPlan,
-  displayDashboardTasks,
-};
+module.exports = { displayDashboardTasks, displayDashboardPlan };
